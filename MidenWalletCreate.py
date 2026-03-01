@@ -69,8 +69,13 @@ def activity(bot: Bot):
 
 
     bot.miden.import_wallet()
-    while not bot.ads.page.locator('a[href="/fullpage.html#/"]').is_visible():
-        time.sleep(1)
+    for _ in range(30):
+        if bot.ads.page.locator('a[href="/fullpage.html#/"]').is_visible():
+            break
+        time.sleep(0.5)
+    else:
+        logger.error('Ошибка создания Miden Wallet! Удалите расширение в профиле и перезапустите софт...')
+        return
     random_sleep(1)
     button = bot.ads.page.locator("button span.mr-1").first
     button.click()
