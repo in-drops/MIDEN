@@ -30,6 +30,9 @@ def time_filter(accounts: list[Account]) -> list[Account]:
             continue
         if last_date > limit_date:
             continue
+        address = get_value_from_txt(account=account, filename=ADDRESS_FILE)
+        if address is None:
+            continue
         filter_count = get_value_from_txt(account=account, filename=FAUCET_FILE)
         if filter_count is None:
             filter_count = 0
