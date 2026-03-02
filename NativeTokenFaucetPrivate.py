@@ -109,11 +109,11 @@ def activity(bot: Bot):
             time.sleep(0.5)
             bot.ads.random_click(request_button)
             for _ in range(60):
-                if bot.ads.page.locator('div[id="success-tick"]').is_visible():
+                if bot.ads.page.locator('div[id="private-success-tick"]').is_visible():
                     random_sleep(1.5)
-                    logger.success(f'Токены {int(random_value) / 1000000} $MIDEN успешно получены!🔥')
+                    logger.success(f'Токены {int(random_value) / 1000000} $MIDEN успешно получены! 🎯')
                     increase_counter_in_txt(bot, filename=FAUCET_FILE)
-                    bot.ads.page.get_by_text("CLICK ANYWHERE TO CONTINUE").click()
+                    bot.ads.page.locator('button[id="private-close-button"]').click()
                     faucets += 1
                     break
                 time.sleep(1)

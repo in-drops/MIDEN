@@ -112,7 +112,7 @@ def activity(bot: Bot):
             for _ in range(60):
                 if bot.ads.page.locator('div[id="success-tick"]').is_visible():
                     random_sleep(1.5)
-                    logger.success(f'Токены {int(random_value) / 1000000} $MIDEN успешно получены!🔥')
+                    logger.success(f'Токены {int(random_value) / 1000000} $MIDEN успешно получены! 🎯')
                     increase_counter_in_txt(bot, filename=FAUCET_FILE)
                     bot.ads.page.get_by_text("CLICK ANYWHERE TO CONTINUE").click()
                     faucets += 1
