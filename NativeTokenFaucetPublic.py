@@ -131,7 +131,10 @@ def activity(bot: Bot):
             random_sleep(10, 15)
 
         except Exception:
-            logger.error('Ошибка взаимодействия с сайтом! Перезапустите софт...')
+            logger.error('Ошибка взаимодействия с сайтом!')
+            bot.ads.page.reload()
+            placeholder.wait_for(state='visible')
+            errors += 1
 
 
 if __name__ == '__main__':
