@@ -94,26 +94,32 @@ class Miden:
                 self.ads.page.get_by_role('button', name='Unlock').click()
                 time.sleep(3)
 
-                if self.ads.page.locator('a[href="/fullpage.html#/"]').is_visible():
-                    logger.info(f"{self.ads.profile_number}: Успешная авторизация в Miden Wallet!")
-                    random_sleep(1, 3)
+            if self.ads.page.get_by_role('button', name='Hide').is_visible():
+                self.ads.page.get_by_role('button', name='Hide').click()
+                random_sleep(1)
+
+            if self.ads.page.locator('a[href="/fullpage.html#/"]').is_visible():
+                logger.info(f"{self.ads.profile_number}: Успешная авторизация в Miden Wallet!")
+                random_sleep(1, 3)
+                if self.ads.page.locator('a[href="/fullpage.html#/history"]').is_visible():
                     self.ads.page.locator('a[href="/fullpage.html#/history"]').click()
                     random_sleep(2.5)
+
+                if self.ads.page.locator('a[href="/fullpage.html#/"]').is_visible():
                     self.ads.page.locator('a[href="/fullpage.html#/"]').click()
                     random_sleep(1)
+                if self.ads.page.get_by_role('button', name='Hide').is_visible():
+                    self.ads.page.get_by_role('button', name='Hide').click()
+                    random_sleep(1)
+                if self.ads.page.locator('div[class="relative"]').filter(has_text='Receive').is_visible():
+                    self.ads.page.locator('div[class="relative"]').filter(has_text='Receive').click()
+                    random_sleep(1)
+                    if self.ads.page.get_by_role('button', name='Claim All').is_visible():
+                        self.ads.page.get_by_role('button', name='Claim All').click()
+                        random_sleep(1)
                     if self.ads.page.get_by_role('button', name='Hide').is_visible():
                         self.ads.page.get_by_role('button', name='Hide').click()
                         random_sleep(1)
-                    if self.ads.page.locator('div[class="relative"]').filter(has_text='Receive').is_visible():
-                        self.ads.page.locator('div[class="relative"]').filter(has_text='Receive').click()
-                        random_sleep(1)
-                        if self.ads.page.get_by_role('button', name='Claim All').is_visible():
-                            self.ads.page.get_by_role('button', name='Claim All').click()
-                            random_sleep(1)
-
-            elif self.ads.page.locator('a[href="/fullpage.html#/"]').is_visible():
-                logger.info(f"{self.ads.profile_number}: Уже авторизованы в Miden Wallet!")
-                random_sleep(1, 3)
 
             else:
                 raise Exception(f"{self.ads.profile_number}: Ошибка авторизации в Miden Wallet!")
