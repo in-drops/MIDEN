@@ -26,7 +26,9 @@ class Miden:
     def open_miden(self):
         '''Открытие страницы кошелька'''
         self.ads.open_url(self._url)
-        random_sleep(5, 10)
+        random_sleep(1)
+        self.ads.page.reload()
+        random_sleep(5, 7)
 
     def import_wallet(self):
 
@@ -83,38 +85,52 @@ class Miden:
         self.open_miden()
 
         if not self.password:
-            raise Exception(f"{self.ads.profile_number}: Не указан пароль для авторизации в Rabby Wallet!")
+            raise Exception(f"{self.ads.profile_number}: Не указан пароль для авторизации в Miden Wallet!")
 
         try:
-            if self.ads.page.locator('input[id="password"]').is_visible():
-                self.ads.page.locator('input[id="password"]').fill(self.password)
+            if self.ads.page.locator('input[id="unlock-password"]').is_visible():
+                self.ads.page.locator('input[id="unlock-password"]').fill(self.password)
                 random_sleep(1, 2)
-                self.ads.page.locator('button[type="submit"]').click()
+                self.ads.page.get_by_role('button', name='Unlock').click()
                 time.sleep(3)
 
-                if self.ads.page.locator('div[class="bg-r-neutral-bg-2"]').nth(0).is_visible():
-                    logger.info(f"{self.ads.profile_number}: Успешная авторизация в Rabby Wallet!")
+                if self.ads.page.locator('a[href="/fullpage.html#/"]').is_visible():
+                    logger.info(f"{self.ads.profile_number}: Успешная авторизация в Miden Wallet!")
                     random_sleep(1, 3)
+                    self.ads.page.locator('a[href="/fullpage.html#/history"]').click()
+                    random_sleep(2.5)
+                    self.ads.page.locator('a[href="/fullpage.html#/"]').click()
+                    random_sleep(1)
+                    if self.ads.page.get_by_role('button', name='Hide').is_visible():
+                        self.ads.page.get_by_role('button', name='Hide').click()
+                        random_sleep(1)
+                    if self.ads.page.locator('div[class="relative"]').filter(has_text='Receive').is_visible():
+                        self.ads.page.locator('div[class="relative"]').filter(has_text='Receive').click()
+                        random_sleep(1)
+                        if self.ads.page.get_by_role('button', name='Claim All').is_visible():
+                            self.ads.page.get_by_role('button', name='Claim All').click()
+                            random_sleep(1)
 
-            else:
-                logger.info(f"{self.ads.profile_number}: Уже авторизованы в Rabby Wallet!")
+            elif self.ads.page.locator('a[href="/fullpage.html#/"]').is_visible():
+                logger.info(f"{self.ads.profile_number}: Уже авторизованы в Miden Wallet!")
                 random_sleep(1, 3)
 
+            else:
+                raise Exception(f"{self.ads.profile_number}: Ошибка авторизации в Miden Wallet!")
+
         except Exception:
-            logger.error(f"{self.ads.profile_number}: Ошибка авторизации в Rabby Wallet!")
+            logger.error(f"{self.ads.profile_number}: Ошибка авторизации в Miden Wallet!")
 
     def wait_for_miden_page(self, timeout=10):
-        for _ in range(int(timeout * 2)):
+        for _ in range(int(timeout * 2)):  # проверка каждые 0.5 сек
             for page in self.ads.context.pages:
+                title = ""
                 try:
-                    url = page.url
+                    title = page.title() or ""
                 except:
-                    continue
+                    pass
 
-                if (
-                        "chrome-extension://" in url
-                        and ("notification" in url.lower() or "popup" in url.lower())
-                ):
+                if "Miden Wallet" in title:
                     return page
 
             time.sleep(0.5)
@@ -130,28 +146,22 @@ class Miden:
 
             wallet_page = self.wait_for_miden_page()
             if wallet_page:
-                # logger.success("Окно Rabby Wallet найдено! ✅")
+                # logger.success("Окно Miden Wallet найдено! ✅")
                 pass
             else:
-                # logger.error("Не удалось найти окно Rabby Wallet! ")
+                logger.error("Не удалось найти окно Miden Wallet! ")
                 return
 
             time.sleep(1)
 
-            if wallet_page.get_by_text("Ignore all", exact=True).is_visible():
-                wallet_page.get_by_text("Ignore all", exact=True).click()
-                time.sleep(1)
-
-            if wallet_page and not wallet_page.is_closed() and wallet_page.locator('input[id="password"]').is_visible():
-                wallet_page.locator('input[id="password"]').fill(self.password)
+            if wallet_page and not wallet_page.is_closed() and wallet_page.locator('input[id="unlock-password"]').is_visible():
+                wallet_page.locator('input[id="unlock-password"]').fill(self.password)
                 random_sleep(1, 2)
-                wallet_page.locator('button[type="submit"]').click()
+                wallet_page.get_by_role('button', name='Unlock').click()
                 random_sleep(1)
 
             buttons_name = ['Connect',
-                            'Sign',
-                            'Confirm',
-                            'Add'
+                            'Confirm'
                             ]
 
             for __ in range(buttons):
@@ -171,7 +181,7 @@ class Miden:
                                     break
                                 time.sleep(1)
 
-                        logger.info('Успешно подтверждено в Rabby Wallet!')
+                        logger.info('Успешно подтверждено в Miden Wallet!')
                         break
 
                 else:

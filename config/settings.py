@@ -80,7 +80,8 @@ class Config:
 
     rabby_url = 'chrome-extension://acmacodkjbdgmoleebolmdjonilkdbch/popup.html'
 
-    miden_url = 'chrome-extension://ablmompanofnodfdkgchkpmphailefpb/popup.html'
+    # miden_url = 'chrome-extension://ablmompanofnodfdkgchkpmphailefpb/popup.html'
+    miden_url = 'chrome-extension://ablmompanofnodfdkgchkpmphailefpb/fullpage.html'
 
     # ниже системные переменные, не меняйте их
     bot_token = os.getenv('BOT_TOKEN')
