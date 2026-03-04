@@ -194,12 +194,18 @@ def activity(bot: Bot):
 
             text = bot.ads.page.locator('div[class="p-3 sm:p-4 space-y-3 sm:space-y-4"]').nth(0).locator('div[class="flex items-center gap-1"]').inner_text()
             if not '.' in text:
-                logger.warning(f'Баланс токена ${token_name} нулевой! Замена... 🚨')
+                logger.warning(f'Баланс выбранного токена нулевой! Замена... ')
                 errors += 1
                 random_sleep(1.5)
                 continue
             else:
                 value = float(re.findall(r'\d+(?:\.\d+)?', text)[0])
+
+            if value <= 0.01:
+                logger.warning('Баланс выбранного токена слишком маленький! Замена... ')
+                errors += 1
+                random_sleep(1.5)
+                continue
 
 
 
