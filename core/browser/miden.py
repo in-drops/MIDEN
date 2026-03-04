@@ -104,6 +104,9 @@ class Miden:
                 if self.ads.page.locator('a[href="/fullpage.html#/history"]').is_visible():
                     self.ads.page.locator('a[href="/fullpage.html#/history"]').click()
                     random_sleep(2.5)
+                if self.ads.page.get_by_role('button', name='Hide').is_visible():
+                    self.ads.page.get_by_role('button', name='Hide').click()
+                    random_sleep(1)
 
                 if self.ads.page.locator('a[href="/fullpage.html#/"]').is_visible():
                     self.ads.page.locator('a[href="/fullpage.html#/"]').click()
