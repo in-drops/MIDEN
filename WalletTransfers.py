@@ -77,31 +77,37 @@ def worker(account: Account) -> None:
 
 
 def activity(bot: Bot):
-    bot.ads.open_url('chrome-extension://ablmompanofnodfdkgchkpmphailefpb/fullpage.html')
-    random_sleep(1)
-    bot.ads.page.reload()
-    random_sleep(5, 7)
 
-    if bot.ads.page.locator('input[id="unlock-password"]').is_visible():
-        bot.ads.page.locator('input[id="unlock-password"]').fill(bot.account.password)
-        random_sleep(1, 2)
-        bot.ads.page.get_by_role('button', name='Unlock').click()
-        time.sleep(3)
-
-    if bot.ads.page.get_by_role('button', name='Hide').is_visible():
-        bot.ads.page.get_by_role('button', name='Hide').click()
+    try:
+        bot.ads.open_url('chrome-extension://ablmompanofnodfdkgchkpmphailefpb/fullpage.html')
         random_sleep(1)
+        bot.ads.page.reload()
+        random_sleep(5, 7)
+
+        if bot.ads.page.locator('input[id="unlock-password"]').is_visible():
+            bot.ads.page.locator('input[id="unlock-password"]').fill(bot.account.password)
+            random_sleep(1, 2)
+            bot.ads.page.get_by_role('button', name='Unlock').click()
+            time.sleep(3)
+
+        if bot.ads.page.get_by_role('button', name='Hide').is_visible():
+            bot.ads.page.get_by_role('button', name='Hide').click()
+            random_sleep(1)
+
+        random_sleep(2)
+
+        transfers = 0
+        errors = 0
+        random_count = random.randint(1, 5)
+        address_ph = bot.ads.page.get_by_placeholder('Recipient account ID')
+        amount_ph = bot.ads.page.get_by_placeholder('0')
+        addresses = get_list_from_file("addresses_parsing.txt")
+
+    except Exception:
+        logger.error(f'Ошибка при входе в кошелёк!')
+        return
 
 
-
-    random_sleep(2)
-
-    transfers = 0
-    errors = 0
-    random_count = random.randint(1, 5)
-    address_ph = bot.ads.page.get_by_placeholder('Recipient account ID')
-    amount_ph = bot.ads.page.get_by_placeholder('0')
-    addresses = get_list_from_file("addresses_parsing.txt")
 
     logger.warning(f'Выбрано случайное количество transfers на рандомные Miden адреса: {random_count}! Начинаем активность...✈️')
 
@@ -217,22 +223,25 @@ def activity(bot: Bot):
                 random_sleep(1)
                 bot.ads.page.reload()
                 random_sleep(5, 7)
+                try:
+                    if bot.ads.page.locator('input[id="unlock-password"]').is_visible():
+                        bot.ads.page.locator('input[id="unlock-password"]').fill(bot.account.password)
+                        random_sleep(1, 2)
+                        bot.ads.page.get_by_role('button', name='Unlock').click()
+                        time.sleep(3)
 
-                if bot.ads.page.locator('input[id="unlock-password"]').is_visible():
-                    bot.ads.page.locator('input[id="unlock-password"]').fill(bot.account.password)
-                    random_sleep(1, 2)
-                    bot.ads.page.get_by_role('button', name='Unlock').click()
-                    time.sleep(3)
+                    if bot.ads.page.get_by_role('button', name='Hide').is_visible():
+                        bot.ads.page.get_by_role('button', name='Hide').click()
+                        random_sleep(1)
 
-                if bot.ads.page.get_by_role('button', name='Hide').is_visible():
-                    bot.ads.page.get_by_role('button', name='Hide').click()
+                    if bot.ads.page.locator('a[href="/fullpage.html#/send"]').filter(has_text='Send').is_visible():
+                        bot.ads.page.locator('a[href="/fullpage.html#/send"]').filter(has_text='Send').click()
+                        random_sleep(1)
+
                     random_sleep(1)
-
-                if bot.ads.page.locator('a[href="/fullpage.html#/send"]').filter(has_text='Send').is_visible():
-                    bot.ads.page.locator('a[href="/fullpage.html#/send"]').filter(has_text='Send').click()
-                    random_sleep(1)
-
-                random_sleep(1)
+                except Exception:
+                    logger.error(f'Ошибка на странице кошелька!')
+                    return
 
             if transfers >= random_count:
                 logger.success(f'Активность завершена! Всего выполнено transfers: {transfers}. Данные в {FILE}.🔥')
@@ -248,21 +257,27 @@ def activity(bot: Bot):
             bot.ads.page.reload()
             random_sleep(5, 7)
 
-            if bot.ads.page.locator('input[id="unlock-password"]').is_visible():
-                bot.ads.page.locator('input[id="unlock-password"]').fill(bot.account.password)
-                random_sleep(1, 2)
-                bot.ads.page.get_by_role('button', name='Unlock').click()
-                time.sleep(3)
+            try:
+                if bot.ads.page.locator('input[id="unlock-password"]').is_visible():
+                    bot.ads.page.locator('input[id="unlock-password"]').fill(bot.account.password)
+                    random_sleep(1, 2)
+                    bot.ads.page.get_by_role('button', name='Unlock').click()
+                    time.sleep(3)
 
-            if bot.ads.page.get_by_role('button', name='Hide').is_visible():
-                bot.ads.page.get_by_role('button', name='Hide').click()
+                if bot.ads.page.get_by_role('button', name='Hide').is_visible():
+                    bot.ads.page.get_by_role('button', name='Hide').click()
+                    random_sleep(1)
+
+                if bot.ads.page.locator('a[href="/fullpage.html#/send"]').filter(has_text='Send').is_visible():
+                    bot.ads.page.locator('a[href="/fullpage.html#/send"]').filter(has_text='Send').click()
+                    random_sleep(1)
+
                 random_sleep(1)
+            except Exception:
+                logger.error(f'Ошибка на странице кошелька!')
+                return
 
-            if bot.ads.page.locator('a[href="/fullpage.html#/send"]').filter(has_text='Send').is_visible():
-                bot.ads.page.locator('a[href="/fullpage.html#/send"]').filter(has_text='Send').click()
-                random_sleep(1)
 
-            random_sleep(1)
 
     if errors >= 5:
         logger.error('Исчерпаны 5 попыток исправления ошибок swap-процессов!')
