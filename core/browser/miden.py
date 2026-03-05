@@ -194,7 +194,7 @@ class Miden:
                         break
 
                 else:
-                    logger.error(f'{self.ads.profile_number} Ошибка подтверждения в Rabby Wallet!')
+                    logger.error(f'{self.ads.profile_number} Ошибка подтверждения в Miden Wallet!')
                     return
 
                 time.sleep(3)
