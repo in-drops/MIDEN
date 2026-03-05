@@ -220,7 +220,7 @@ def activity(bot: Bot):
                 amount = f"{amount:.2f}".rstrip('0').rstrip('.')
 
             elif value >= 10:
-                amount = int(value * random.uniform(0.05, 0.2))
+                amount = int(value * random.uniform(0.1, 0.2))
             else:
                 errors += 1
                 continue
