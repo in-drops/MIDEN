@@ -147,11 +147,7 @@ def activity(bot: Bot):
                     f'Активность завершена! Всего выполнено swaps: {swaps}. Данные в {FILE}.🔥')
                 return
 
-            if errors >= 5:
-                logger.error('Исчерпаны 5 попыток исправления ошибок swap-процессов!')
-                logger.success(
-                    f'Активность завершена! Всего выполнено swaps: {swaps}. Данные в {FILE}.🔥')
-                return
+
 
             try:
                 select = bot.ads.page.locator('select.h-auto.border-1.rounded-xl').nth(0)
@@ -290,6 +286,12 @@ def activity(bot: Bot):
                 logger.error('Ошибка входа на сайт!')
                 return
             continue
+
+    if errors >= 5:
+        logger.error('Исчерпаны 5 попыток исправления ошибок swap-процессов!')
+        logger.success(
+            f'Активность завершена! Всего выполнено swaps: {swaps}. Данные в {FILE}.🔥')
+        return
 
 
 if __name__ == '__main__':
