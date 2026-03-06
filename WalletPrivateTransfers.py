@@ -20,7 +20,7 @@ import re
 
 
 
-FILE = 'transfers_count.txt'
+FILE = 'private_transfers_count.txt'
 FAUCET_FILE = 'success_public_faucet_count.txt'
 
 
@@ -200,7 +200,7 @@ def activity(bot: Bot):
             random_sleep(1)
             bot.ads.page.get_by_role('button', name='Next').click()
             random_sleep(1)
-            bot.ads.page.locator('div[class="flex flex-col gap-y-2"]').filter(has_text='Share transaction privately').locator('input[name="sharePrivately"]').uncheck()
+            bot.ads.page.locator('div[class="flex flex-col gap-y-2"]').filter(has_text='Share transaction privately').locator('input[name="sharePrivately"]').check()
             random_sleep(1)
             bot.ads.page.get_by_role('button', name='Send').click()
 
@@ -211,7 +211,7 @@ def activity(bot: Bot):
                     time.sleep(1)
                     if bot.ads.page.get_by_role('button', name='Done').nth(0).is_visible():
                         bot.ads.page.get_by_role('button', name='Done').nth(0).click()
-                    logger.success('Transfer выполнен успешно!🎯')
+                    logger.success('Private Transfer выполнен успешно!🎯')
                     increase_counter_in_txt(bot, filename=FILE)
                     transfers += 1
                     break
